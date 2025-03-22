@@ -1,11 +1,14 @@
 package org.example.demo1;
 
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.geometry.NodeOrientation;
 import javafx.scene.chart.ScatterChart;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.VBox;
 
 import java.text.DecimalFormat;
 import java.time.LocalTime;
@@ -13,6 +16,8 @@ import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
+import javafx.scene.layout.VBox;
+
 
 public class BMIController {
     @FXML
@@ -40,6 +45,11 @@ private Label welcomeText;
     @FXML
     private Label lblLocalTime; // New label for showing local time
 
+
+    @FXML
+    private VBox rootVBox;
+
+    @FXML
     private ResourceBundle rb;
 
 
@@ -59,6 +69,7 @@ private Label welcomeText;
 
          // show the time
           displayLocalTime(locale);
+          applyTextDirection(locale);
 
       }catch(MissingResourceException e) {
           e.printStackTrace();
@@ -130,5 +141,30 @@ private Label welcomeText;
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("hh:mm:ss", locale);
         String formattedTime = currentTime.format(formatter);
         lblLocalTime.setText(rb.getString("localTime") + " " + formattedTime);
+    }
+
+
+
+    private void applyTextDirection(Locale locale) {
+        String lang = locale.getLanguage();
+        boolean isRTL = lang.equals("fa") || lang.equals("ur") || lang.equals("ar") || lang.equals("he");
+
+        Platform.runLater(() -> {
+            if (rootVBox != null) {
+                // Flip the full layout direction
+                rootVBox.setNodeOrientation(
+                        isRTL ? NodeOrientation.RIGHT_TO_LEFT : NodeOrientation.LEFT_TO_RIGHT
+                );
+            }
+
+            // Align text fields
+            tfWeight.setStyle(isRTL ? "-fx-text-alignment: right;" : "-fx-text-alignment: left;");
+            tfHeight.setStyle(isRTL ? "-fx-text-alignment: right;" : "-fx-text-alignment: left;");
+        });
+    }
+
+
+    public void onFAClick(ActionEvent actionEvent) {
+        setLanguage(new Locale("fa", "IR"));
     }
 }

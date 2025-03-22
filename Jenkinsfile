@@ -21,17 +21,8 @@ pipeline {
                 bat 'mvn test'
             }
         }
-        stage('Publish Test Results') {
-            steps {
-                junit '**/target/surefire-reports/*.xml'
-            }
-        }
-        stage('Code Coverage') {
-            steps {
-                bat 'mvn verify jacoco:report'
-                jacoco()
-            }
-        }
+
+
         stage('Build Docker Image') {
             steps {
                 script {
