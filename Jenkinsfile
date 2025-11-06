@@ -1,42 +1,47 @@
 pipeline {
     agent any
-    tools {
-            maven 'Maven3'   // the name you configured in Global Tools
-        }
-    environment {
 
-        JAVA_HOME = '/path/to/jdk-21'
-        PATH = "${JAVA_HOME}/bin:${env.PATH}"
+    tools {
+        maven 'Maven3'   // Must match the name configured in Jenkins Global Tool Configuration
+    }
+
+    environment {
+        JAVA_HOME = 'C:\\path\\to\\jdk-21'  // Use Windows-style path if running on Windows agent
+        PATH = "${JAVA_HOME}\\bin;${env.PATH}"
 
         DOCKERHUB_CREDENTIALS_ID = 'Docker_Hub'
         DOCKERHUB_REPO = 'amirdirin/sep2_week3_2025_bmidemo'
         DOCKER_IMAGE_TAG = 'latest'
     }
+
     stages {
         stage('Checkout') {
             steps {
                 git branch: 'master', url: 'https://github.com/ADirin/RTL_BMI_Solution_Instructions.git'
             }
         }
+
         stage('Build') {
             steps {
                 bat 'mvn clean install'
             }
         }
+
         stage('Test') {
             steps {
                 bat 'mvn test'
             }
         }
 
-
         stage('Build Docker Image') {
             steps {
                 script {
-                    docker.build("${DOCKERHUB_REPO}:${DOCKER_IMAGE_TAG}")
+                    def app = docker.build("${DOCKERHUB_REPO}:${DOCKER_IMAGE_TAG}")
+                    env.BUILT_IMAGE = app.id  // Optional: store image ID for reuse
                 }
             }
         }
+
         stage('Push Docker Image to Docker Hub') {
             steps {
                 script {
@@ -45,6 +50,18 @@ pipeline {
                     }
                 }
             }
+        }
+    }
+
+    post {
+        always {
+            echo 'Pipeline finished.'
+        }
+        success {
+            echo 'Build and push succeeded!'
+        }
+        failure {
+            echo 'Build or test failed.'
         }
     }
 }
