@@ -4,6 +4,10 @@ pipeline {
             maven 'Maven3'   // the name you configured in Global Tools
         }
     environment {
+
+        JAVA_HOME = '/path/to/jdk-21'
+        PATH = "${JAVA_HOME}/bin:${env.PATH}"
+
         DOCKERHUB_CREDENTIALS_ID = 'Docker_Hub'
         DOCKERHUB_REPO = 'amirdirin/sep2_week3_2025_bmidemo'
         DOCKER_IMAGE_TAG = 'latest'
