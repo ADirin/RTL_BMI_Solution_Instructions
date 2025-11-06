@@ -14,6 +14,7 @@ import java.text.DecimalFormat;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
+import java.util.Map;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 import javafx.scene.layout.VBox;
@@ -51,16 +52,22 @@ private Label welcomeText;
 
     @FXML
     private ResourceBundle rb;
-
-
+    private Locale currentLocale = new Locale("en", "US");
+    private Map<String, String> localizedStrings;
     public void initialize() {
         setLanguage(new Locale("en", "US"));
 
     }
 
     private void setLanguage(Locale locale) {
-        lblResult.setText("");
-      try {
+        /*lblResult.setText("");
+        localizedStrings = LocalizationService.getLocalizedStrings(locale);
+
+        lblWeight.setText(localizedStrings.getOrDefault("weight", "Weight"));
+        lblHeight.setText(localizedStrings.getOrDefault("height", "Height"));
+        btnCalculate.setText(localizedStrings.getOrDefault("calculate", "Calculate"));
+
+       try {
 
           rb = ResourceBundle.getBundle("messages", locale);
           lblWeight.setText(rb.getString("weight"));
@@ -74,14 +81,26 @@ private Label welcomeText;
       }catch(MissingResourceException e) {
           e.printStackTrace();
           lblResult.setText("Error loading resources error");
-      }
-    }
+      }*/
 
+            currentLocale = locale; // store the selected language
 
+            lblResult.setText("");
+            localizedStrings = LocalizationService.getLocalizedStrings(locale);
+
+            lblWeight.setText(localizedStrings.getOrDefault("weight", "Weight"));
+            lblHeight.setText(localizedStrings.getOrDefault("height", "Height"));
+            btnCalculate.setText(localizedStrings.getOrDefault("calculate", "Calculate"));
+
+            displayLocalTime(locale);
+
+            // ✅ Apply RTL/LTR layout after setting language
+            applyTextDirection(locale);
+        }
 
 
     public void onCalculateClick(ActionEvent actionEvent) {
-        if (tfWeight == null || tfHeight == null) {
+        /*if (tfWeight == null || tfHeight == null) {
             System.err.println("TextFields are empty");
             return;
         }
@@ -111,6 +130,22 @@ private Label welcomeText;
         } catch (NumberFormatException e) {
             // Handle invalid input
             lblResult.setText(rb.getString("invalid"));
+        }*/
+
+        try {
+            // ✅ use the active locale
+            double weight = Double.parseDouble(tfWeight.getText());
+            double height = Double.parseDouble(tfHeight.getText()) / 100.0;
+            double bmi = weight / (height * height);
+            DecimalFormat df = new DecimalFormat("#0.00");
+            lblResult.setText(localizedStrings.getOrDefault("result", "Your BMI is") + " " + df.format(bmi));
+
+            // Save to database
+            String language = currentLocale.getLanguage();  // or store current locale
+            BMIResultService.saveResult(weight, height, bmi, language);
+
+        } catch (NumberFormatException e) {
+            lblResult.setText(localizedStrings.getOrDefault("invalid", "Invalid input"));
         }
     }
 
@@ -140,7 +175,7 @@ private Label welcomeText;
         LocalTime currentTime = LocalTime.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("hh:mm:ss", locale);
         String formattedTime = currentTime.format(formatter);
-        lblLocalTime.setText(rb.getString("localTime") + " " + formattedTime);
+        lblLocalTime.setText(localizedStrings.getOrDefault("localTime", "Local Time") + " " + formattedTime);
     }
 
 
@@ -167,4 +202,5 @@ private Label welcomeText;
     public void onFAClick(ActionEvent actionEvent) {
         setLanguage(new Locale("fa", "IR"));
     }
+
 }
