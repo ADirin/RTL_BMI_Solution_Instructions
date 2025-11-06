@@ -5,7 +5,7 @@ pipeline {
         }
     environment {
         DOCKERHUB_CREDENTIALS_ID = 'Docker_Hub'
-        DOCKERHUB_REPO = 'amirdirin/sep2_week2_2025_bmidemo'
+        DOCKERHUB_REPO = 'amirdirin/sep2_week3_2025_bmidemo'
         DOCKER_IMAGE_TAG = 'latest'
     }
     stages {
