@@ -6,9 +6,10 @@ pipeline {
     }
 
     environment {
-        JAVA_HOME = 'C:\\Program Files\\Java\\jdk-21'  // Adjust to your actual JDK path
+    PATH = "C:\\Program Files\\Docker\\Docker\\resources\\bin;${env.PATH}"
+       JAVA_HOME = 'C:\\Program Files\\Java\\jdk-21'  // Adjust to your actual JDK path
             PATH = "${JAVA_HOME}\\bin;${env.PATH}"
-        PATH = "C:\\Program Files\\Docker\\Docker\\resources\\bin;${env.PATH}"
+
         DOCKERHUB_CREDENTIALS_ID = 'Docker_Hub'
         DOCKERHUB_REPO = 'amirdirin/sep2_week3_2025_bmidemo'
         DOCKER_IMAGE_TAG = 'latest'
