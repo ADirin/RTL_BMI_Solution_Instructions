@@ -1,5 +1,9 @@
 pipeline {
     agent any
+    tools {
+    Maven 'Maven3'
+
+    }
     environment {
         DOCKERHUB_CREDENTIALS_ID = 'Docker_Hub'
         DOCKERHUB_REPO = 'amirdirin/sep2_week2_2025_bmidemo'
