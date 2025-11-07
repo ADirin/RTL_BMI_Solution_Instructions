@@ -11,7 +11,7 @@ pipeline {
 
 
         DOCKERHUB_CREDENTIALS_ID = 'Docker_Hub'
-        DOCKERHUB_REPO = 'amirdirin/sep2_week3_2025_bmidemo'
+        DOCKERHUB_REPO = 'amirdirin/sep2_week3_2025_bmidemo1'
         DOCKER_IMAGE_TAG = 'latest'
     }
 
@@ -47,7 +47,7 @@ pipeline {
             steps {
                 script {
                     docker.withRegistry('https://index.docker.io/v1/', DOCKERHUB_CREDENTIALS_ID) {
-                        docker.image("${DOCKERHUB_REPO}:${DOCKER_IMAGE_TAG}").push()
+                       docker.image('amirdirin/sep2_week3_2025_bmidemo1:latest').push()
                     }
                 }
             }
