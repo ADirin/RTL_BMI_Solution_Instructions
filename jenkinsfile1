@@ -14,7 +14,7 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                git branch: 'master', url: 'https://github.com/ADirin/vsg_3012_javafx_v1_db.git'
+                git branch: 'master', url: 'https://github.com/ADirin/RTL_BMI_Solution_Instructions.git'
             }
         }
 
