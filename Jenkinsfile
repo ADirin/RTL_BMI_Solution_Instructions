@@ -11,7 +11,7 @@ pipeline {
 
 
         DOCKERHUB_CREDENTIALS_ID = 'Docker_Hub'
-        DOCKERHUB_REPO = 'amirdirin/sep2_week3_2025_bmidemo1'
+        DOCKERHUB_REPO = 'xxx/sep2_week3_2025_xxxx'
         DOCKER_IMAGE_TAG = 'latest'
     }
 
